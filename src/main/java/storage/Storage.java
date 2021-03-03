@@ -13,8 +13,6 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -83,8 +81,7 @@ public class Storage {
                 textToAppend = "T|" + isDone + "|" + descriptionOfTask + "\n";
             } else if (task instanceof Deadline) {
                 Deadline deadline = (Deadline) task;
-                textToAppend = "D|" + isDone + "|" + descriptionOfTask + "|"
-                        + deadline.getDate() + "|" + deadline.getTime()  + "\n";
+                textToAppend = "D|" + isDone + "|" + descriptionOfTask + "|" + deadline.getBy() + "\n";
             } else if (task instanceof Event) {
                 Event event = (Event) task;
                 textToAppend = "E|" + isDone + "|" + descriptionOfTask + "|" + event.getAt().strip() + "\n";
@@ -99,7 +96,8 @@ public class Storage {
      * @return ArrayList with the tasks added from the file
      * @throws FileNotFoundException
      */
-    public ArrayList<Task> loadFile() throws FileNotFoundException, DukeException {
+
+    public ArrayList<Task> loadFile() throws FileNotFoundException {
         Scanner sc = new Scanner(dukeFile);
         ArrayList<Task> taskList = new ArrayList<>();
         while (sc.hasNext()) {
@@ -110,7 +108,7 @@ public class Storage {
                 task = new Event(taskType[2], taskType[3]);
                 break;
             case "D":
-                task = new Deadline(taskType[2], formatDate(taskType[3]), formatTime(taskType[3]));
+                task = new Deadline(taskType[2], taskType[3]);
                 break;
             case "T":
                 task = new Todo(taskType[2]);
@@ -124,15 +122,10 @@ public class Storage {
         return taskList;
     }
 
-    private LocalDate formatDate(String inputDate) throws DukeException {
-        LocalDate date = parser.parseDate(inputDate);
+ /*   private LocalDate formatDate(String time){
+        LocalDate date = parser.parseTime(time);
         return date;
-    }
-
-    private LocalTime formatTime(String inputTime) {
-        LocalTime time = parser.parseTime(inputTime);
-        return time;
-    }
+    }*/
 }
 
 
